@@ -13,14 +13,11 @@ const Provider = (props) => {
   const updateLogin = (flag) => {
     setLogin(flag);
     localStorage.setItem("login", flag);
-   
   };
   useEffect(() => {
-    
     setLog(localStorage.getItem("loggedIn") || false);
     setLogin(localStorage.getItem("login") || false);
-   
-  },[isLoggedIn,login]);
+  }, [isLoggedIn, login]);
   return (
     <Context.Provider
       value={{ isLoggedIn, update, login, setLogin, updateLogin }}

@@ -1,19 +1,19 @@
 import React, { useContext, useState } from "react";
 import axios from "axios";
-import { toast } from 'react-toastify';
-import { MdOutlineLogin } from 'react-icons/md';
+import { toast } from "react-toastify";
+import { MdOutlineLogin } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import { Context } from '../context/context.jsx';
+import { Context } from "../context/context.jsx";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { isLoggedIn, update, setLogin,updateLogin } = useContext(Context);
+  const { isLoggedIn, update, setLogin, updateLogin } = useContext(Context);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    
+
     // Show loading toast and capture its ID
     const toastId = toast.info("Loading...", {
       autoClose: false, // Prevent auto-close during loading
@@ -24,21 +24,22 @@ const Login = () => {
         "http://localhost:8080/api/v1/auth/login",
         { email, password }
       );
-      
+
       // Update toast to show success message
-      toast.update(toastId, { 
+      toast.update(toastId, {
         render: "Success!",
         type: "success",
         autoClose: 2000,
       });
-      
+
       updateLogin(false);
       update(true); // Update login status
       setTimeout(() => navigate("/main"), 2000); // Redirect after 2 seconds
     } catch (err) {
       // Update toast to show error message
-      toast.update(toastId, { 
-        render: err.response?.data?.message || "An error occurred. Please try again.",
+      toast.update(toastId, {
+        render:
+          err.response?.data?.message || "An error occurred. Please try again.",
         type: "error",
         autoClose: 2000,
       });
@@ -53,7 +54,10 @@ const Login = () => {
             <h2 className="text-3xl font-bold mb-8 text-black">Login</h2>
             <form onSubmit={handleLogin} className="space-y-6 text-black">
               <div className="mb-4">
-                <label className="block text-lg font-bold mb-2 text-black" htmlFor="email">
+                <label
+                  className="block text-lg font-bold mb-2 text-black"
+                  htmlFor="email"
+                >
                   Email
                 </label>
                 <input
@@ -67,7 +71,10 @@ const Login = () => {
                 />
               </div>
               <div className="mb-6">
-                <label className="block text-lg font-bold mb-2 text-black" htmlFor="password">
+                <label
+                  className="block text-lg font-bold mb-2 text-black"
+                  htmlFor="password"
+                >
                   Password
                 </label>
                 <input

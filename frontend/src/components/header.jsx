@@ -19,7 +19,7 @@ const Header = () => {
       element.scrollIntoView({ behavior: "smooth" });
     }
   };
-  
+
   return (
     <header className="fixed top-0 w-full text-white bg-black p-2 z-10 shadow-md">
       <div className="flex justify-between">

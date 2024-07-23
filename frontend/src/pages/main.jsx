@@ -1,7 +1,8 @@
 import { FaFileUpload, FaGoogleDrive } from "react-icons/fa";
 import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Comment, Hourglass } from "react-loader-spinner";
+import { Hourglass } from "react-loader-spinner";
 
 const Home = () => {
   const fileInputRef = useRef(null);
@@ -9,6 +10,8 @@ const Home = () => {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState(null);
   const [loader, setLoader] = useState(false);
+  const navigate = useNavigate();
+
   const handleChange = (event) => {
     setInput(event.target.value);
   };
@@ -37,9 +40,68 @@ const Home = () => {
       console.error("Error submitting the form", err);
     }
   };
-  //"flex justify-between bg-black rounded-2xl"
+
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
+  };
+
+  const loadPicker = () => {
+    window.gapi.load("auth", { callback: onAuthApiLoad });
+    window.gapi.load("picker", { callback: onPickerApiLoad });
+  };
+
+  let oauthToken;
+
+  const onAuthApiLoad = () => {
+    window.gapi.auth.authorize(
+      {
+        client_id:
+          "640847453854-kvs4omk5rqmbs38rvuqn5n2a9dvnjjum.apps.googleusercontent.com",
+        scope: ["https://www.googleapis.com/auth/drive.file"],
+        immediate: false,
+      },
+      handleAuthResult
+    );
+  };
+
+  const onPickerApiLoad = () => {
+    // Picker API loaded
+  };
+
+  const handleAuthResult = (authResult) => {
+    if (authResult && !authResult.error) {
+      oauthToken = authResult.access_token;
+      createPicker();
+    }
+  };
+
+  const createPicker = () => {
+    if (oauthToken) {
+      const picker = new window.google.picker.PickerBuilder()
+        .addView(window.google.picker.ViewId.DOCS)
+        .setOAuthToken(oauthToken)
+        .setDeveloperKey("AIzaSyDRyTZzUxG5e2ThBpHLbiUgJJWgFJgw0LE")
+        .setCallback(pickerCallback)
+        .build();
+      picker.setVisible(true);
+    }
+  };
+
+  const pickerCallback = (data) => {
+    if (data.action === window.google.picker.Action.PICKED) {
+      const fileId = data.docs[0].id;
+      const fileName = data.docs[0].name;
+      setFile({ id: fileId, name: fileName });
+    }
+  };
+
+  const handleGoogleDriveUploadClick = () => {
+    loadPicker();
+  };
+
+  const handleLogout = () => {
+    // Perform any necessary cleanup actions here (e.g., clearing tokens)
+    navigate("/");
   };
 
   return (
@@ -62,7 +124,7 @@ const Home = () => {
                 <button
                   type="button"
                   className="font-bold p-2 flex items-center"
-                  disabled
+                  onClick={handleGoogleDriveUploadClick}
                 >
                   <FaGoogleDrive className="mr-2" />
                   <span>Upload from Drive</span>
@@ -82,19 +144,23 @@ const Home = () => {
                   onChange={handleFileChange}
                 />
               </div>
-
-              <div
-                className={
-                  loader
-                    ? "flex text-gray-600 disabled justify-between bg-black rounded-2xl"
-                    : "flex justify-between bg-black  text-white rounded-2xl"
-                }
-              >
+              <div className="flex items-center space-x-4">
                 <button
                   type="submit"
-                  className=" p-1 pl-4 pr-4 text-xl font-bold rounded-2xl shadow-lg"
+                  className={`p-1 pl-4 pr-4 text-xl font-bold rounded-2xl shadow-lg hover:bg-gray-700 ${
+                    loader ? "bg-gray-600" : "bg-black text-white"
+                  }`}
                 >
                   Appraise
+                </button>
+                <button
+                  type="button"
+                  className={`p-1 pl-4 pr-4 text-xl font-bold rounded-2xl shadow-lg hover:bg-gray-700 ${
+                    loader ? "bg-gray-600" : "bg-black text-white"
+                  }`}
+                  onClick={handleLogout}
+                >
+                  Logout
                 </button>
               </div>
             </div>
@@ -148,12 +214,3 @@ const Home = () => {
 };
 
 export default Home;
-//<Hourglass
-// visible={true}
-// height="80"
-// width="80"
-// ariaLabel="hourglass-loading"
-// wrapperStyle={{}}
-// wrapperClass=""
-// colors={['#306cce', '#72a1ed']}
-// />

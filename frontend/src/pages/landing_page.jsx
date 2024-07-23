@@ -4,10 +4,10 @@ import { Context } from "../context/context.jsx";
 import { useContext } from "react";
 import Profile from "../components/profile.jsx";
 import sumit_img from "../images/img.jpg";
-import shivam_img from '../images/shivam.jpg'
+import shivam_img from "../images/shivam.jpg";
 
 const Landing = () => {
-  const { login, setLogin,updateLogin } = useContext(Context);
+  const { login, setLogin, updateLogin } = useContext(Context);
 
   const Developers = [
     {
@@ -59,8 +59,11 @@ const Landing = () => {
           </nav>
         </div>
       </div>
-      <div id="developers" className="flex flex-col items-center justify-center h-screen  text-white">
-      <div className="mb-10 p-5">
+      <div
+        id="developers"
+        className="flex flex-col items-center justify-center h-screen  text-white"
+      >
+        <div className="mb-10 p-5">
           <AnimatedText text="Developers...." />
         </div>
         <div className="flex flex-wrap justify-center">

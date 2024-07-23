@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { FaSkull } from "react-icons/fa6";
-import icon from '../assets/Icon.png'
+import icon from "../assets/Icon.png";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
@@ -111,7 +111,7 @@ const Register = () => {
         </div>
         <div className="w-1/3 bg-black flex justify-center items-center">
           {/* <FaSkull /> */}
-          <img src={icon} className="text-white w-50 h-50"  />
+          <img src={icon} className="text-white w-50 h-50" />
         </div>
       </div>
     </div>
